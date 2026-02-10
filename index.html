@@ -1,151 +1,544 @@
-<!doctype html>
+
+<!doctype html> 
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Alice</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>SAMIRA XV</title>
+  <meta 
+    name="viewport" 
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="SAMIRA XV">
+  <meta property="og:title" content="SAMIRA XV">
+  <meta property="og:description" content="SAMIRA XV">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/uploads/users/227/capa__e9520bd5fbda9cde.png">
+  <meta property="og:locale" content="pt_BR">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #000 !important;
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    img, video, iframe {
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;
+      user-select: none;
+      max-width: 100%;
+    }
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{background:#000;font-family:sans-serif;overflow-x:hidden}
+    /* CAPA */
+    #capa {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+      z-index: 20;
+      opacity: 1;
+      transition: opacity .25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: opacity;
+    }
+    #capa img,
+    #capa iframe {
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+      border: 0;
+      display: block;
+    }
+    #abrirConvite {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      z-index: 30;
+    }
 
-#capa{
-position:fixed;inset:0;background:#000;
-display:flex;align-items:center;justify-content:center;
-z-index:20;transition:.3s;
-}
-#capa img{max-width:100%;max-height:100%;object-fit:contain}
-#abrirConvite{position:absolute;inset:0;background:transparent;border:0}
+    /* CONVITE MAIN – sempre centralizado, sem faixa cortando */
+    .convite-main {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0)
+               env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+      background: #000;
+    }
 
-.convite-main{
-min-height:100vh;
-display:flex;align-items:center;justify-content:center;
-}
+    /* PALCO 9:16 – sempre inteiro dentro do viewport */
+    .convite-stage {
+      position: relative;
+      background: #000;
+      overflow: hidden;
 
-.convite-stage{
-position:relative;
-width:min(100vw,56.25vh);
-height:min(100vh,177.78vw);
-max-width:480px;
-background:#000;
-}
+      /* 9:16 mantendo tudo visível:
+         - largura = min(100vw, 56.25vh)
+         - altura  = min(100vh, 177.78vw)
+      */
+      width:  min(100vw, 56.25vh);
+      height: min(100vh, 177.78vw);
 
-#container2-video{position:absolute;inset:0}
-#video{width:100%;height:100%;object-fit:contain}
+      max-width: 480px;
+      max-height: 853px;
+    }
 
-#botoesConvite{position:absolute;inset:0;pointer-events:none}
-#botoesConvite a{
-position:absolute;
-width:20%;height:12%;
-transform:translate(-50%,-50%);
-pointer-events:auto;
-}
+    /* VÍDEO ocupa o palco (contain) */
+    #container2-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #video {
+      display: block;
+      border: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      background: #000;
+    }
 
-#sugestoes{top:85%;left:83%}
-#local{top:81%;left:19%}
-#presenca{top:81%;left:52%}
+    /* BOTÕES – dentro do palco 9:16 */
+    #botoesConvite {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      user-select: none;
+    }
+    #botoesConvite a {
+      position: absolute;
+      display: block;
+      pointer-events: auto;
+      background: transparent !important;
+      border: 0 !important;
+      outline: 0 !important;
+      box-shadow: none !important;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent !important;
 
-.overlayConvite{
-position:fixed;inset:0;
-background:rgba(0,0,0,.85);
-display:none;
-align-items:center;justify-content:center;
-z-index:10000;
-}
-.overlayConvite img{
-max-width:90vw;
-max-height:90vh;
-}
-.fecharOverlay{
-position:absolute;top:10px;right:20px;
-font-size:24px;background:#000;color:#fff;border:0
-}
-</style>
+      width: 20%;
+      height: 12%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* POSIÇÕES – em porcentagem dentro do palco */
+    #filtro {
+      top: 47.92%;
+      left: 83.33%;
+    }
+    #dress {
+      top: 63.54%;
+      left: 83.33%;
+    }
+    #sugestoes {
+      top: 85.42%;
+      left: 83.33%;
+    }
+    #local {
+      top: 81.25%;
+      left: 19.00%;
+    }
+    #presenca {
+      top: 81.25%;
+      left: 51.85%;
+    }
+
+    /* Overlays */
+    .overlayConvite {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 10000;
+    }
+    @supports (backdrop-filter: blur(4px)) {
+      .overlayConvite {
+        backdrop-filter: blur(6px);
+      }
+    }
+    .overlayConvite img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+    }
+    .frameCanva {
+      width: 90vw;
+      max-width: 480px;
+      aspect-ratio: 9 / 16;
+      background: #000;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,.7);
+    }
+    .frameCanva iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .fecharOverlay {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      font-size: 22px;
+      padding: 4px 12px;
+      cursor: pointer;
+    }
+    #toastPix {
+      display: none;
+      position: fixed;
+      bottom: 7%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.78);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      z-index: 10001;
+      font-weight: 600;
+      font-size: 14px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .btnPixCopy {
+      margin-top: 16px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 0;
+      background: linear-gradient(135deg,#22c55e,#a3e635);
+      color: #022c22;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Telas muito pequenas */
+    @media (max-width: 360px) {
+      #botoesConvite a {
+        width: 22%;
+        height: 13%;
+      }
+    }
+
+    /* Desktop – apenas centraliza, sem cortar */
+    @media (min-width: 1024px) {
+      html, body {
+        overflow-y: auto;
+      }
+      .convite-stage {
+        max-width: 540px;
+        max-height: 960px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div id="capa">
-<img src="img/capa.png">
-<button id="abrirConvite"></button>
-</div>
 
-<main class="convite-main">
-<div class="convite-stage">
+  <div id="capa" aria-label="Toque para abrir o convite">
+    <img decoding="async" src="/uploads/users/227/capa__6bb6b715e46ca41d.png" alt="Capa do convite">
+    <button id="abrirConvite" aria-label="Abrir convite"></button>
+  </div>
 
-<div id="container2-video">
-<video id="video" playsinline muted preload="metadata">
-<source src="video/video.mp4" type="video/mp4">
-</video>
-</div>
+  <main class="convite-main">
+    <div class="convite-stage">
 
-<div id="botoesConvite">
-<a id="presenca" href="https://wa.me/message/RUFXR6PHCK4GN1/" target="_blank"></a>
-<a id="local" href="https://maps.app.goo.gl/Ek2dJgRp51VEyGMR9" target="_blank"></a>
-<a id="sugestoes" href="sugestoes.png"></a>
-</div>
+      <div id="container2-video">
+        <video id="video" playsinline webkit-playsinline preload="metadata" muted>
+          <source src="/uploads/users/227/convite__0408554c3f49cbda.mp4" type="video/mp4">
+          Seu navegador não suporta vídeo HTML5.
+        </video>
+      </div>
+<div id="botoesConvite" aria-hidden="false"><a id="filtro" href="#" title="Filtro"></a><a id="dress" href="#" title="Dress Code"></a><a id="local" href="https://maps.app.goo.gl/GckE7g8dz9v5a5Gv7" target="_blank" rel="noopener" title="Ver local"></a><a id="presenca" href="https://wa.me/5511989957305?text=Ol%C3%A1%2C%20gostaria%20de%20confirmar%20minha%20presen%C3%A7a!" target="_blank" rel="noopener" title="Confirmar presença"></a><a id="sugestoes" href="#" title="Sugestões de presente"></a></div>
+    </div>
+  </main>
 
-</div>
-</main>
 
-<div id="overlayPix" class="overlayConvite">
-<button class="fecharOverlay" data-close="#overlayPix">×</button>
-<img src="img/sugestoes.png">
-</div>
 
-<script>
-document.addEventListener("DOMContentLoaded",()=>{
+  <div id="overlayPix" class="overlayConvite" role="dialog" aria-modal="true">
+    <button class="fecharOverlay" data-close="#overlayPix" aria-label="Fechar">×</button>
+    <img decoding="async" loading="lazy" src="/uploads/users/227/c-pia-de-molde-3-botoes-1-__2534d421967659a4.png" alt="Sugestões de presente" id="pixImage">
+  </div>
 
-const capa=document.getElementById("capa");
-const abrir=document.getElementById("abrirConvite");
-const video=document.getElementById("video");
+  <div id="toastPix">✨ Chave Pix copiada!</div>
 
-let musica=document.createElement("audio");
-musica.src="audio/musica.mp3";
-musica.loop=true;
-musica.volume=0;
-document.body.appendChild(musica);
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const capa  = document.getElementById("capa");
+      const abrir = document.getElementById("abrirConvite");
+      const video = document.getElementById("video");
 
-async function iniciar(){
-video.play().catch(()=>{});
-musica.play().catch(()=>{});
+      let musica = null;
+      const usarAudioVideo = false;
+      musica = document.createElement("audio");
+      musica.src   = "/uploads/users/227/musica__cc5b92640d9597df.mp3";
+      musica.loop  = true;
+      musica.preload = "auto";
+      musica.volume  = 0;
+      musica.setAttribute("playsinline", "");
+      musica.style.display = "none";
+      document.body.appendChild(musica);
 
-let vol=0;
-let fade=setInterval(()=>{
-vol+=0.05;
-musica.volume=Math.min(vol,0.8);
-if(vol>=0.8)clearInterval(fade);
-},180);
-}
+      // REMOVIDO FULLSCREEN: função vazia, não faz mais nada
+      const entrarFullscreen = () => {
+        // sem fullscreen – mantido leve e sem tela preta ao voltar de apps externos
+      };
 
-abrir.addEventListener("click",()=>{
-capa.style.opacity=0;
-setTimeout(()=>capa.style.display="none",200);
-iniciar();
-});
+      const jaIniciou = window.sessionStorage.getItem("conviteFiltroIniciado") === "1";
 
-});
-</script>
+      const iniciarMidias = async () => {
+        try {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) {
+            const ctx = new AC();
+            await ctx.resume();
+          }
+        } catch (_) {}
 
-<script>
-(function(){
+        // Se usamos o som do VÍDEO (sem áudio separado)
+        if (usarAudioVideo && video) {
+          try {
+            video.muted = false;
+            if (typeof video.volume === "number") {
+              let vol = 0;
+              video.volume = 0;
+              await video.play();
+              const alvoVideo = 0.9;
+              const fadeV = setInterval(() => {
+                vol += 0.05;
+                if (vol >= alvoVideo) {
+                  vol = alvoVideo;
+                  clearInterval(fadeV);
+                }
+                video.volume = vol;
+              }, 180);
+            } else {
+              await video.play();
+            }
+          } catch (_) {}
+        } else {
+          // Com áudio separado: vídeo mudo e som vem do mp3
+          if (video) {
+            try {
+              video.muted = true;
+              await video.play();
+            } catch (_) {}
+          }
+        }
 
-const open=s=>document.querySelector(s).style.display='flex';
-const close=s=>document.querySelector(s).style.display='none';
+        if (musica) {
+          try {
+            await musica.play();
+            let vol = musica.volume || 0;
+            const alvo = 0.8;
+            const fade = setInterval(() => {
+              vol += 0.05;
+              musica.volume = Math.min(vol, alvo);
+              if (vol >= alvo) clearInterval(fade);
+            }, 180);
+          } catch {
+            musica.muted = true;
+            musica.play().catch(()=>{});
+          }
+        }
+      };
 
-document.getElementById("sugestoes")
-.addEventListener("click",e=>{
-e.preventDefault();
-open("#overlayPix");
-});
+      if (jaIniciou) {
+        if (capa) {
+          capa.style.opacity = "0";
+          capa.style.display = "none";
+        }
+        iniciarMidias();
+        return;
+      }
 
-document.addEventListener("click",e=>{
-const btn=e.target.closest("[data-close]");
-if(btn)close(btn.dataset.close);
-});
+      if (capa && abrir) {
+        abrir.addEventListener("click", async (e) => {
+          e.preventDefault();
 
-})();
-</script>
+          // não chama mais fullscreen
+          entrarFullscreen();
 
+          capa.style.opacity = "0";
+          setTimeout(() => { capa.style.display = "none"; }, 180);
+
+          try {
+            window.sessionStorage.setItem("conviteFiltroIniciado", "1");
+          } catch (_) {}
+
+          iniciarMidias();
+        });
+      } else if (video) {
+        try {
+          window.sessionStorage.setItem("conviteFiltroIniciado", "1");
+        } catch (_) {}
+        iniciarMidias();
+      }
+    });
+  </script>
+
+  <script>
+    (function(){
+      document.addEventListener('contextmenu', e => e.preventDefault(), {passive:false});
+      document.addEventListener('dragstart',  e => e.preventDefault(), {passive:false});
+
+      const open  = sel => {
+        const el = document.querySelector(sel);
+        if (el) {
+          el.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        }
+      };
+      const close = sel => {
+        const el = document.querySelector(sel);
+        if (el) {
+          el.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      };
+
+      const filtroBtn = document.getElementById('filtro');
+      if (filtroBtn) {
+        filtroBtn.addEventListener('click', e => {
+          const href = filtroBtn.getAttribute('href');
+          if (!href || href === '#') {
+            e.preventDefault();
+            open('#overlayFiltro');
+          }
+        });
+      }
+
+      const dressBtn = document.getElementById('dress');
+      if (dressBtn) {
+        dressBtn.addEventListener('click', e => {
+          const href = dressBtn.getAttribute('href');
+          if (!href || href === '#') {
+            e.preventDefault();
+            open('#overlayDress');
+          }
+        });
+      }
+
+      // SUGESTÕES:
+      // - se href tiver link (diferente de "#"), deixa navegar pro link
+      // - se href for "#" ou vazio, abre a imagem (overlayPix)
+      const sugBtn = document.getElementById('sugestoes');
+      if (sugBtn) {
+        sugBtn.addEventListener('click', e => {
+          const href = sugBtn.getAttribute('href');
+          if (!href || href === '#') {
+            e.preventDefault();
+            open('#overlayPix');
+          }
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-close]');
+        if (btn) {
+          e.preventDefault();
+          close(btn.getAttribute('data-close'));
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          close('#overlayFiltro');
+          close('#overlayDress');
+          close('#overlayPix');
+        }
+      });
+
+      // CORREÇÃO TELA PRETA MAPS / PRESENÇA
+      const btnLocal = document.getElementById('local');
+      if (btnLocal) {
+        btnLocal.addEventListener('click', () => {
+          document.body.style.overflow = '';
+          document.body.style.height   = '';
+          document.body.style.position = '';
+        });
+      }
+
+      const btnPres = document.getElementById('presenca');
+      if (btnPres) {
+        btnPres.addEventListener('click', () => {
+          document.body.style.overflow = '';
+          document.body.style.height   = '';
+          document.body.style.position = '';
+        });
+      }
+
+      window.addEventListener('focus', () => {
+        document.body.style.overflow = '';
+        document.body.style.height   = '';
+        document.body.style.position = '';
+      });
+
+      const chavePix = "#11989957305";
+      const toast = document.getElementById('toastPix');
+
+      const copiar = async (texto) => {
+        if (!texto) return;
+        try {
+          await navigator.clipboard.writeText(texto);
+        } catch {
+          const ta = document.createElement('textarea');
+          ta.value = texto;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        if (!toast) return;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 1600);
+      };
+
+      const imgPix  = document.getElementById('pixImage');
+      const btnCopy = document.getElementById('btnPixCopy');
+
+      if (imgPix) {
+        imgPix.addEventListener('click', () => copiar(chavePix));
+      }
+      if (btnCopy) {
+        btnCopy.addEventListener('click', () => copiar(chavePix));
+      }
+    })();
+  </script>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"081821f03f3846ffb6ed8025c3b7f289","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
