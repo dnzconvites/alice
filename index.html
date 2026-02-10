@@ -11,12 +11,12 @@
 body{background:#000;font-family:sans-serif;overflow-x:hidden}
 
 #capa{
-position:fixed;inset:0;display:flex;align-items:center;
-justify-content:center;background:#000;z-index:20;
-transition:opacity .25s
+position:fixed;inset:0;display:flex;
+align-items:center;justify-content:center;
+background:#000;z-index:20;transition:.25s
 }
 #capa img{max-width:100%;max-height:100vh}
-#abrirConvite{position:absolute;inset:0;border:0;background:none;cursor:pointer}
+#abrirConvite{position:absolute;inset:0;border:0;background:none}
 
 .convite-main{
 min-height:100vh;display:flex;
@@ -34,15 +34,10 @@ width:100%;height:100%;
 object-fit:contain;background:#000
 }
 
-#botoesConvite{
-position:absolute;inset:0;
-z-index:2;pointer-events:none
-}
+#botoesConvite{position:absolute;inset:0;z-index:2}
 #botoesConvite a{
-position:absolute;
-width:20%;height:12%;
-transform:translate(-50%,-50%);
-pointer-events:auto
+position:absolute;width:20%;height:12%;
+transform:translate(-50%,-50%)
 }
 
 #filtro{top:47.92%;left:83.33%}
@@ -52,10 +47,9 @@ pointer-events:auto
 #presenca{top:81.25%;left:51.85%}
 
 .overlayConvite{
-position:fixed;inset:0;
-display:none;justify-content:center;
-align-items:center;background:rgba(0,0,0,.85);
-z-index:10000
+position:fixed;inset:0;display:none;
+justify-content:center;align-items:center;
+background:rgba(0,0,0,.85);z-index:10000
 }
 .overlayConvite img{
 max-width:92vw;max-height:92vh
@@ -63,16 +57,7 @@ max-width:92vw;max-height:92vh
 .fecharOverlay{
 position:absolute;top:12px;right:20px;
 background:#000;color:#fff;border:0;
-font-size:22px;padding:4px 12px;
-cursor:pointer
-}
-#toastPix{
-display:none;position:fixed;
-bottom:7%;left:50%;
-transform:translateX(-50%);
-background:#000;color:#fff;
-padding:10px 16px;border-radius:10px;
-z-index:10001;font-weight:600
+font-size:22px;padding:4px 12px
 }
 </style>
 </head>
@@ -87,18 +72,16 @@ z-index:10001;font-weight:600
 <main class="convite-main">
 <div class="convite-stage">
 
-<div id="container2-video">
 <video id="video" playsinline muted preload="metadata">
 <source src="video.mp4" type="video/mp4">
 </video>
-</div>
 
 <div id="botoesConvite">
-<a id="filtro" href="#"></a>
-<a id="dress" href="#"></a>
+<a id="filtro"></a>
+<a id="dress"></a>
 <a id="local" href="https://maps.app.goo.gl/GckE7g8dz9v5a5Gv7" target="_blank"></a>
 <a id="presenca" href="https://wa.me/5511989957305?text=Ol%C3%A1%2C%20gostaria%20de%20confirmar%20minha%20presen%C3%A7a!" target="_blank"></a>
-<a id="sugestoes.png" href="#"></a>
+<a id="sugestoes"></a>
 </div>
 
 </div>
@@ -109,26 +92,19 @@ z-index:10001;font-weight:600
 <img src="presentes.png" id="pixImage">
 </div>
 
-<div id="toastPix">✨ Chave Pix copiada!</div>
-
 <audio id="musica" src="musica.mp3" loop></audio>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-
 const abrir=document.getElementById("abrirConvite")
 const capa=document.getElementById("capa")
 const video=document.getElementById("video")
 const musica=document.getElementById("musica")
 
-abrir.onclick=async()=>{
-capa.style.opacity="0"
-setTimeout(()=>capa.style.display="none",200)
-
+abrir.onclick=()=>{
+capa.style.display="none"
 video.play()
 musica.volume=0
 musica.play()
-
 let v=0
 const fade=setInterval(()=>{
 v+=0.05
@@ -154,17 +130,6 @@ open("#overlayPix")
 document.addEventListener("click",e=>{
 const btn=e.target.closest("[data-close]")
 if(btn)close(btn.dataset.close)
-})
-
-const chavePix="#5511989957305"
-const toast=document.getElementById("toastPix")
-
-document.getElementById("pixImage").onclick=async()=>{
-await navigator.clipboard.writeText(chavePix)
-toast.style.display="block"
-setTimeout(()=>toast.style.display="none",1600)
-}
-
 })
 </script>
 
